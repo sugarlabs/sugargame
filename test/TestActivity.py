@@ -2,37 +2,35 @@ from gettext import gettext as _
 
 import sys
 import gtk
+import pygame
 
 import sugar.activity.activity
 import sugar.graphics.toolbutton
 
 sys.path.append('..') # Import sugargame package from top directory.
-import sugargame.activity
+import sugargame.canvas
 
 import TestGame
 
-class TestActivity(sugargame.activity.PygameActivity):
+class TestActivity(sugar.activity.activity.Activity):
     def __init__(self, handle):
         super(TestActivity, self).__init__(handle)
         
-        self.metadata['mime_type'] = 'application/x-physics-activity'
-        
-        self._resume_path = None
-        
-        self.build_toolbar()
-        self.build_canvas()
-
         self.paused = False
 
         # Create the game instance.
-        self.game = TestGame.TestGame(self.get_pygame_screen())
-        
-        # If resuming from the Journal, load the data.
-        if self._resume_path:
-            self.read_file(self._resume_path)
+        self.game = TestGame.TestGame()
 
-        # Start the main loop running.
-        self.run_pygame(self.game.run)
+        # Build the activity toolbar.
+        self.build_toolbar()
+
+        # Build the Pygame canvas.
+        self._canvas = sugargame.canvas.PygameCanvas(self)
+        # Note that set_canvas implicitly calls read_file when resuming from the Journal.
+        self.set_canvas(self._canvas)
+        
+        # Start the game running.
+        self._canvas.run_pygame(self.game.run)
         
     def build_toolbar(self):        
         stop_play = sugar.graphics.toolbutton.ToolButton('media-playback-stop')
@@ -64,12 +62,7 @@ class TestActivity(sugargame.activity.PygameActivity):
             button.set_tooltip(_("Stop"))
 
     def read_file(self, file_path):
-        # Read file is called before the constructor returns when game is not yet valid.
-        # Caching the file path seems to work in this specific instance.
-        if not self.game:
-            self._resume_path = file_path
-        else:
-            self.game.read_file(file_path)
+        self.game.read_file(file_path)
         
     def write_file(self, file_path):
         self.game.write_file(file_path)

@@ -91,10 +91,10 @@ class Translator(object):
         pygame.event.post(pygame.event.Event(pygame.VIDEOEXPOSE))
         return True
 
-    def _resize_cb( self, activity, event ):
-        #evt = pygame.event.Event(eventwrap.pygame.VIDEORESIZE, 
-        #                         size=(event.width,event.height), width=event.width, height=event.height))
-        #pygame.event.post(evt)
+    def _resize_cb(self, widget, event):
+        evt = pygame.event.Event(pygame.event.VIDEORESIZE, 
+                                 size=(event.width,event.height), width=event.width, height=event.height)
+        pygame.event.post(evt)
         return False # continue processing
 
     def _quit_cb(self, data=None):

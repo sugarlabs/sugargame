@@ -21,10 +21,8 @@ class PygameCanvas(gtk.EventBox):
         self._socket = gtk.Socket()
         self.add(self._socket)
         self.show_all()
-        
+
     def run_pygame(self, main_fn):
-        assert not pygame.display.get_init(), "PygameCanvas.run_pygame can only be called once."
-        
         # Run the main loop after a short delay.  The reason for the delay is that the
         # Sugar activity is not properly created until after its constructor returns.
         # If the Pygame main loop is called from the activity constructor, the 
@@ -32,10 +30,13 @@ class PygameCanvas(gtk.EventBox):
         gobject.idle_add(self._run_pygame_cb, main_fn)
 
     def _run_pygame_cb(self, main_fn):
+        assert pygame.display.get_surface() is None, "PygameCanvas.run_pygame can only be called once."
+        
         # Preinitialize Pygame with the X window ID.
+        assert pygame.display.get_init() == False, "Pygame must not be initialized before calling PygameCanvas.run_pygame."
         os.environ['SDL_WINDOWID'] = str(self._socket.get_id())
         pygame.init()
-
+        
         # Restore the default cursor.
         self._socket.get_window().set_cursor(None)
 

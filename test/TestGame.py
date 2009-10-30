@@ -3,13 +3,12 @@ import pygame
 import gtk
 
 class TestGame:
-    def __init__(self, screen):
-        self.screen = screen
-
-        # Set up a clock for managing the framerate.
+    def __init__(self):
+        # Set up a clock for managing the frame rate.
         self.clock = pygame.time.Clock()
         
         # Set up a font for rendering.
+        pygame.font.init()
         self.font = pygame.font.Font(None, 24)
         
     def set_paused(self, paused):
@@ -26,6 +25,8 @@ class TestGame:
     # The main game loop.
     def run(self):
         self.running = True    
+            
+        screen = pygame.display.get_surface()
 
         while self.running:
             # Pump GTK messages.
@@ -34,10 +35,11 @@ class TestGame:
 
             # Pump PyGame messages.
             for event in pygame.event.get():
-                pass
-            
+                if event.type == pygame.QUIT:
+                    return
+
             # Clear Display
-            self.screen.fill((255,255,255)) #255 for white
+            screen.fill((255,255,255)) #255 for white
 
             # Flip Display
             pygame.display.flip()  
@@ -49,10 +51,8 @@ class TestGame:
 # ./TestGame.py 
 def main():
     pygame.init()
-    pygame.display.init()
-    width, height = pygame.display.list_modes()[0]
-    screen = pygame.display.set_mode((width,height))
-    game = TestGame(screen) 
+    pygame.display.set_mode((0, 0), pygame.RESIZABLE)
+    game = TestGame() 
     game.run()
 
 if __name__ == '__main__':
