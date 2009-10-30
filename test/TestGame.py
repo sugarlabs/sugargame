@@ -6,10 +6,14 @@ class TestGame:
     def __init__(self):
         # Set up a clock for managing the frame rate.
         self.clock = pygame.time.Clock()
-        
-        # Set up a font for rendering.
-        pygame.font.init()
-        self.font = pygame.font.Font(None, 24)
+
+        self.x = -100
+        self.y = 100
+
+        self.vx = 10
+        self.vy = 0
+
+        self.paused = False
         
     def set_paused(self, paused):
         self.paused = paused
@@ -38,9 +42,25 @@ class TestGame:
                 if event.type == pygame.QUIT:
                     return
 
+            # Move the ball
+            if not self.paused:
+                self.x += self.vx
+                if self.x > screen.get_width() + 100:
+                    self.x = -100
+                
+                self.y += self.vy
+                if self.y > screen.get_height() - 100:
+                    self.y = screen.get_height() - 100
+                    self.vy = -self.vy
+                
+                self.vy += 5;
+            
             # Clear Display
             screen.fill((255,255,255)) #255 for white
 
+            # Draw the ball
+            pygame.draw.circle(screen, (255,0,0), (self.x, self.y), 100)
+                    
             # Flip Display
             pygame.display.flip()  
             
