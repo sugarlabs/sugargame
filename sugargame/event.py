@@ -69,12 +69,6 @@ class Translator(object):
         self._inner_evb.connect('motion-notify-event', self._mousemove_cb)
         self._inner_evb.connect('expose-event', self._expose_cb)
         self._inner_evb.connect('configure-event', self._resize_cb)
-    
-        # Fake the first VIDEORESIZE event to set the initial screen dimensions.
-        r = self._inner_evb.get_allocation()
-        evt = pygame.event.Event(pygame.VIDEORESIZE, 
-                                 size=(r.width,r.height), width=r.width, height=r.height)
-        pygame.event.post(evt)
         
         # Internal data
         self.__stopped = False

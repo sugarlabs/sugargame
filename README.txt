@@ -96,6 +96,8 @@ main loop, remember to dispatch GTK messages using gtk.main_iteration().
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return
+                elif event.type == pygame.VIDEORESIZE:
+                    pygame.display.set_mode(event.size, pygame.RESIZABLE)
  
             # Clear Display
             screen.fill((255,255,255)) #255 for white
