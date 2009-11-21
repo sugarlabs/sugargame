@@ -25,12 +25,12 @@ class TestActivity(sugar.activity.activity.Activity):
         self.build_toolbar()
 
         # Build the Pygame canvas.
-        self._canvas = sugargame.canvas.PygameCanvas(self)
+        self._pygamecanvas = sugargame.canvas.PygameCanvas(self)
         # Note that set_canvas implicitly calls read_file when resuming from the Journal.
-        self.set_canvas(self._canvas)
+        self.set_canvas(self._pygamecanvas)
         
         # Start the game running.
-        self._canvas.run_pygame(self.game.run)
+        self._pygamecanvas.run_pygame(self.game.run)
         
     def build_toolbar(self):        
         stop_play = sugar.graphics.toolbutton.ToolButton('media-playback-stop')

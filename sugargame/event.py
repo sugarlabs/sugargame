@@ -70,6 +70,12 @@ class Translator(object):
         self._inner_evb.connect('expose-event', self._expose_cb)
         self._inner_evb.connect('configure-event', self._resize_cb)
     
+        # Fake the first VIDEORESIZE event to set the initial screen dimensions.
+        r = self._inner_evb.get_allocation()
+        evt = pygame.event.Event(pygame.VIDEORESIZE, 
+                                 size=(r.width,r.height), width=r.width, height=r.height)
+        pygame.event.post(evt)
+        
         # Internal data
         self.__stopped = False
         self.__keystate = [0] * 323
@@ -92,7 +98,7 @@ class Translator(object):
         return True
 
     def _resize_cb(self, widget, event):
-        evt = pygame.event.Event(pygame.event.VIDEORESIZE, 
+        evt = pygame.event.Event(pygame.VIDEORESIZE, 
                                  size=(event.width,event.height), width=event.width, height=event.height)
         pygame.event.post(evt)
         return False # continue processing
