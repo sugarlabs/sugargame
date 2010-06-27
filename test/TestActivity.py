@@ -26,10 +26,11 @@ class TestActivity(sugar.activity.activity.Activity):
 
         # Build the Pygame canvas.
         self._pygamecanvas = sugargame.canvas.PygameCanvas(self)
+
         # Note that set_canvas implicitly calls read_file when resuming from the Journal.
         self.set_canvas(self._pygamecanvas)
         
-        # Start the game running.
+        # Start the game running (self.game.run is called when the activity constructor returns).
         self._pygamecanvas.run_pygame(self.game.run)
         
     def build_toolbar(self):        
@@ -40,7 +41,6 @@ class TestActivity(sugar.activity.activity.Activity):
 
         toolbar = gtk.Toolbar()
         toolbar.insert(stop_play, 0)
-        toolbar.insert(gtk.SeparatorToolItem(), 1)
         
         toolbox = sugar.activity.activity.ActivityToolbox(self)
         toolbox.add_toolbar(_("Pygame"), toolbar)

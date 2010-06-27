@@ -44,7 +44,8 @@ class Translator(object):
         self._inner_evb = inner_evb
 
         # Enable events
-        self._mainwindow.set_events(
+        # (add instead of set here because the main window is already realized)
+        self._mainwindow.add_events(
             gtk.gdk.KEY_PRESS_MASK | \
             gtk.gdk.KEY_RELEASE_MASK \
         )
@@ -88,7 +89,8 @@ class Translator(object):
         pygame.mouse.get_pos = self._get_mouse_pos
         
     def _expose_cb(self, event, widget):
-        pygame.event.post(pygame.event.Event(pygame.VIDEOEXPOSE))
+        if pygame.display.get_init():
+            pygame.event.post(pygame.event.Event(pygame.VIDEOEXPOSE))
         return True
 
     def _resize_cb(self, widget, event):

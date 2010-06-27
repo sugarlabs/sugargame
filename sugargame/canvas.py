@@ -7,13 +7,20 @@ import event
 CANVAS = None
 
 class PygameCanvas(gtk.EventBox):
-    def __init__(self, mainwindow):
+    
+    """
+    mainwindow is the activity intself.
+    """
+    def __init__(self, mainwindow, pointer_hint = True):
         gtk.EventBox.__init__(self)
 
         global CANVAS
         assert CANVAS == None, "Only one PygameCanvas can be created, ever."
         CANVAS = self
 
+        # Initialize Events translator before widget gets "realized".
+        self.translator = event.Translator(mainwindow, self)
+        
         self._mainwindow = mainwindow
 
         self.set_flags(gtk.CAN_FOCUS)
@@ -38,15 +45,14 @@ class PygameCanvas(gtk.EventBox):
         pygame.init()
         
         # Restore the default cursor.
-        self._socket.get_window().set_cursor(None)
+        self._socket.window.set_cursor(None)
 
         # Initialize the Pygame window.
         r = self.get_allocation()
         pygame.display.set_mode((r.width, r.height), pygame.RESIZABLE)
 
         # Hook certain Pygame functions with GTK equivalents.
-        translator = event.Translator(self._mainwindow, self)
-        translator.hook_pygame()
+        self.translator.hook_pygame()
 
         # Run the Pygame main loop.
         main_fn()
