@@ -4,6 +4,8 @@ Sugargame is a Python package which allows [http://www.pygame.org/ Pygame]
 programs to run well under Sugar. 
 It is fork of the olcpgames framework, which is no longer maintained.
 
+http://git.sugarlabs.org/projects/sugargame
+
 What it does:
 
 * Wraps a Sugar activity around an existing Pygame program with few changes
@@ -99,6 +101,9 @@ main loop, remember to dispatch GTK messages using gtk.main_iteration().
                 elif event.type == pygame.VIDEORESIZE:
                     pygame.display.set_mode(event.size, pygame.RESIZABLE)
  
+            # Check the mouse position
+            x, y = pygame.mouse.get_pos()
+  
             # Clear Display
             screen.fill((255,255,255)) #255 for white
  
@@ -124,5 +129,9 @@ the One Laptop Per Child project.
 
 === Changelog ===
 
+====v1.1====
+* Fix bugs in event handling.  (Pablo Moleri)
+* Remove reference to gtk.Socket.get_window() method, which is missing in older versions of PyGTK.
+
 ====v1.0====
-Initial version of Sugargame
+* Initial version of Sugargame
