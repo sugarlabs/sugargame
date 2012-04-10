@@ -82,6 +82,7 @@ class Translator(object):
         self.__held = set()
         self.__held_time_left = {}
         self.__held_last_time = {}
+        self.__held_last_value = {}
         self.__tick_id = None
 
     def hook_pygame(self):
@@ -115,24 +116,26 @@ class Translator(object):
         pygame.event.post(pygame.event.Event(pygame.QUIT))
 
     def _keydown_cb(self, widget, event):
-        key = event.keyval
+        key = event.hardware_keycode
+        keyval = event.keyval
         if key in self.__held:
             return True
         else:
             if self.__repeat[0] is not None:
                 self.__held_last_time[key] = pygame.time.get_ticks()
                 self.__held_time_left[key] = self.__repeat[0]
+                self.__held_last_value[key] = keyval
             self.__held.add(key)
-            
         return self._keyevent(widget, event, pygame.KEYDOWN)
         
     def _keyup_cb(self, widget, event):
-        key = event.keyval
+        key = event.hardware_keycode
         if self.__repeat[0] is not None:
             if key in self.__held:
                 # This is possibly false if set_repeat() is called with a key held
                 del self.__held_time_left[key]
                 del self.__held_last_time[key]
+                del self.__held_last_value[key]
         self.__held.discard(key)
 
         return self._keyevent(widget, event, pygame.KEYUP)
@@ -229,7 +232,7 @@ class Translator(object):
             self.__held_time_left[key] -= delta
             if self.__held_time_left[key] <= 0:
                 self.__held_time_left[key] = self.__repeat[1]
-                self._keyevent(None, _MockEvent(key), pygame.KEYDOWN)
+                self._keyevent(None, _MockEvent(self.__held_last_value[key]), pygame.KEYDOWN)
                 
         return True
         
