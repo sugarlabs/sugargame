@@ -5,7 +5,11 @@ import gtk
 import pygame
 
 import sugar.activity.activity
-import sugar.graphics.toolbutton
+from sugar.graphics.toolbarbox import ToolbarBox
+from sugar.activity.widgets import ActivityToolbarButton
+from sugar.graphics.toolbutton import ToolButton
+from sugar.activity.widgets import StopButton
+
 
 sys.path.append('..') # Import sugargame package from top directory.
 import sugargame.canvas
@@ -34,19 +38,35 @@ class TestActivity(sugar.activity.activity.Activity):
         self._pygamecanvas.run_pygame(self.game.run)
         
     def build_toolbar(self):        
-        stop_play = sugar.graphics.toolbutton.ToolButton('media-playback-stop')
+        toolbar_box = ToolbarBox()
+        self.set_toolbar_box(toolbar_box)
+        toolbar_box.show()
+
+        activity_button = ActivityToolbarButton(self)
+        toolbar_box.toolbar.insert(activity_button, -1)
+        activity_button.show()
+
+        # Pause/Play button:
+
+        stop_play = ToolButton('media-playback-stop')
         stop_play.set_tooltip(_("Stop"))
         stop_play.set_accelerator(_('<ctrl>space'))
         stop_play.connect('clicked', self._stop_play_cb)
+        stop_play.show()
 
-        toolbar = gtk.Toolbar()
-        toolbar.insert(stop_play, 0)
-        
-        toolbox = sugar.activity.activity.ActivityToolbox(self)
-        toolbox.add_toolbar(_("Pygame"), toolbar)
-        
-        toolbox.show_all()
-        self.set_toolbox(toolbox)
+        toolbar_box.toolbar.insert(stop_play, -1)
+
+        # Blank space (separator) and Stop button at the end:
+
+        separator = gtk.SeparatorToolItem()
+        separator.props.draw = False
+        separator.set_expand(True)
+        toolbar_box.toolbar.insert(separator, -1)
+        separator.show()
+
+        stop_button = StopButton(self)
+        toolbar_box.toolbar.insert(stop_button, -1)
+        stop_button.show()
 
     def _stop_play_cb(self, button):
         # Pause or unpause the game.
