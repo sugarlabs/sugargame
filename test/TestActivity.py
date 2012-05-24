@@ -11,15 +11,16 @@ from sugar.graphics.toolbutton import ToolButton
 from sugar.activity.widgets import StopButton
 
 
-sys.path.append('..') # Import sugargame package from top directory.
+sys.path.append('..')  # Import sugargame package from top directory.
 import sugargame.canvas
 
 import TestGame
 
+
 class TestActivity(sugar.activity.activity.Activity):
     def __init__(self, handle):
         super(TestActivity, self).__init__(handle)
-        
+
         self.paused = False
 
         # Create the game instance.
@@ -31,13 +32,15 @@ class TestActivity(sugar.activity.activity.Activity):
         # Build the Pygame canvas.
         self._pygamecanvas = sugargame.canvas.PygameCanvas(self)
 
-        # Note that set_canvas implicitly calls read_file when resuming from the Journal.
+        # Note that set_canvas implicitly calls read_file when
+        # resuming from the Journal.
         self.set_canvas(self._pygamecanvas)
-        
-        # Start the game running (self.game.run is called when the activity constructor returns).
+
+        # Start the game running (self.game.run is called when the
+        # activity constructor returns).
         self._pygamecanvas.run_pygame(self.game.run)
-        
-    def build_toolbar(self):        
+
+    def build_toolbar(self):
         toolbar_box = ToolbarBox()
         self.set_toolbar_box(toolbar_box)
         toolbar_box.show()
@@ -72,7 +75,7 @@ class TestActivity(sugar.activity.activity.Activity):
         # Pause or unpause the game.
         self.paused = not self.paused
         self.game.set_paused(self.paused)
-        
+
         # Update the button to show the next action.
         if self.paused:
             button.set_icon('media-playback-start')
@@ -83,6 +86,6 @@ class TestActivity(sugar.activity.activity.Activity):
 
     def read_file(self, file_path):
         self.game.read_file(file_path)
-        
+
     def write_file(self, file_path):
         self.game.write_file(file_path)
