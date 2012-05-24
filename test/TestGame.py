@@ -15,6 +15,7 @@ class TestGame:
         self.vy = 0
 
         self.paused = False
+        self.direction = 1
 
     def set_paused(self, paused):
         self.paused = paused
@@ -44,12 +45,19 @@ class TestGame:
                     return
                 elif event.type == pygame.VIDEORESIZE:
                     pygame.display.set_mode(event.size, pygame.RESIZABLE)
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_LEFT:
+                        self.direction = -1
+                    elif event.key == pygame.K_RIGHT:
+                        self.direction = 1
 
             # Move the ball
             if not self.paused:
-                self.x += self.vx
-                if self.x > screen.get_width() + 100:
+                self.x += self.vx * self.direction
+                if self.direction == 1 and self.x > screen.get_width() + 100:
                     self.x = -100
+                elif self.direction == -1 and self.x < -100:
+                    self.x = screen.get_width() + 100
 
                 self.y += self.vy
                 if self.y > screen.get_height() - 100:
