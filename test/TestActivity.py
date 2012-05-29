@@ -4,11 +4,11 @@ import sys
 from gi.repository import Gtk
 import pygame
 
-import sugar.activity.activity
-from sugar.graphics.toolbarbox import ToolbarBox
-from sugar.activity.widgets import ActivityToolbarButton
-from sugar.graphics.toolbutton import ToolButton
-from sugar.activity.widgets import StopButton
+import sugar3.activity.activity
+from sugar3.graphics.toolbarbox import ToolbarBox
+from sugar3.activity.widgets import ActivityToolbarButton
+from sugar3.graphics.toolbutton import ToolButton
+from sugar3.activity.widgets import StopButton
 
 
 sys.path.append('..')  # Import sugargame package from top directory.
@@ -17,7 +17,7 @@ import sugargame.canvas
 import TestGame
 
 
-class TestActivity(sugar.activity.activity.Activity):
+class TestActivity(sugar3.activity.activity.Activity):
     def __init__(self, handle):
         super(TestActivity, self).__init__(handle)
 
