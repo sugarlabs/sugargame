@@ -1,7 +1,7 @@
 from gettext import gettext as _
 
 import sys
-import gtk
+from gi.repository import Gtk
 import pygame
 
 import sugar.activity.activity
@@ -62,7 +62,7 @@ class TestActivity(sugar.activity.activity.Activity):
 
         # Blank space (separator) and Stop button at the end:
 
-        separator = gtk.SeparatorToolItem()
+        separator = Gtk.SeparatorToolItem()
         separator.props.draw = False
         separator.set_expand(True)
         toolbar_box.toolbar.insert(separator, -1)

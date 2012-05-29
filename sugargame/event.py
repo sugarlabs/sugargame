@@ -1,5 +1,5 @@
-import gtk
-import gobject
+from gi.repository import Gtk
+from gi.repository import GObject
 import pygame
 import pygame.event
 import logging 
@@ -46,20 +46,20 @@ class Translator(object):
         # Enable events
         # (add instead of set here because the main window is already realized)
         self._mainwindow.add_events(
-            gtk.gdk.KEY_PRESS_MASK | \
-            gtk.gdk.KEY_RELEASE_MASK \
+            Gdk.EventMask.KEY_PRESS_MASK | \
+            Gdk.EventMask.KEY_RELEASE_MASK \
         )
         
         self._inner_evb.set_events(
-            gtk.gdk.POINTER_MOTION_MASK | \
-            gtk.gdk.POINTER_MOTION_HINT_MASK | \
-            gtk.gdk.BUTTON_MOTION_MASK | \
-            gtk.gdk.BUTTON_PRESS_MASK | \
-            gtk.gdk.BUTTON_RELEASE_MASK 
+            Gdk.EventMask.POINTER_MOTION_MASK | \
+            Gdk.EventMask.POINTER_MOTION_HINT_MASK | \
+            Gdk.EventMask.BUTTON_MOTION_MASK | \
+            Gdk.EventMask.BUTTON_PRESS_MASK | \
+            Gdk.EventMask.BUTTON_RELEASE_MASK 
         )
 
-        self._mainwindow.set_flags(gtk.CAN_FOCUS)
-        self._inner_evb.set_flags(gtk.CAN_FOCUS)
+        self._mainwindow.set_flags(Gtk.CAN_FOCUS)
+        self._inner_evb.set_flags(Gtk.CAN_FOCUS)
         
         # Callback functions to link the event systems
         self._mainwindow.connect('unrealize', self._quit_cb)
@@ -133,7 +133,7 @@ class Translator(object):
         return mod
         
     def _keyevent(self, widget, event, type):
-        key = gtk.gdk.keyval_name(event.keyval)
+        key = Gdk.keyval_name(event.keyval)
         if key is None:
             # No idea what this key is.
             return False 
@@ -157,7 +157,7 @@ class Translator(object):
             self.__keystate[keycode] = type == pygame.KEYDOWN
             if type == pygame.KEYUP:
                 mod = self._keymods()
-            ukey = unichr(gtk.gdk.keyval_to_unicode(event.keyval))
+            ukey = unichr(Gdk.keyval_to_unicode(event.keyval))
             if ukey == '\000':
                 ukey = ''
             evt = pygame.event.Event(type, key=keycode, unicode=ukey, mod=mod)
@@ -193,15 +193,15 @@ class Translator(object):
         else:
             x = event.x
             y = event.y
-            state = event.state
+            state = event.get_state()
 
         rel = (x - self.__mouse_pos[0], y - self.__mouse_pos[1])
         self.__mouse_pos = (x, y)
         
         self.__button_state = [
-            state & gtk.gdk.BUTTON1_MASK and 1 or 0,
-            state & gtk.gdk.BUTTON2_MASK and 1 or 0,
-            state & gtk.gdk.BUTTON3_MASK and 1 or 0,
+            state & Gdk.ModifierType.BUTTON1_MASK and 1 or 0,
+            state & Gdk.ModifierType.BUTTON2_MASK and 1 or 0,
+            state & Gdk.ModifierType.BUTTON3_MASK and 1 or 0,
         ]
         
         evt = pygame.event.Event(pygame.MOUSEMOTION,
@@ -224,9 +224,9 @@ class Translator(object):
         
     def _set_repeat(self, delay=None, interval=None):
         if delay is not None and self.__repeat[0] is None:
-            self.__tick_id = gobject.timeout_add(10, self._tick_cb)
+            self.__tick_id = GObject.timeout_add(10, self._tick_cb)
         elif delay is None and self.__repeat[0] is not None:
-            gobject.source_remove(self.__tick_id)
+            GObject.source_remove(self.__tick_id)
         self.__repeat = (delay, interval)
         
     def _get_mouse_pos(self):

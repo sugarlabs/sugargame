@@ -1,6 +1,6 @@
 #!/usr/bin/python
 import pygame
-import gtk
+from gi.repository import Gtk
 
 
 class TestGame:
@@ -36,8 +36,8 @@ class TestGame:
 
         while self.running:
             # Pump GTK messages.
-            while gtk.events_pending():
-                gtk.main_iteration()
+            while Gtk.events_pending():
+                Gtk.main_iteration()
 
             # Pump PyGame messages.
             for event in pygame.event.get():
