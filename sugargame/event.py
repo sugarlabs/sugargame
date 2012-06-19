@@ -25,7 +25,24 @@ class Translator(object):
         'KP_Down' : pygame.K_KP2,
         'KP_Left' : pygame.K_KP4,
         'KP_Right' : pygame.K_KP6,
-
+        'numbersign' : pygame.K_HASH,
+        'percent' : ord('%'),
+        'exclam' : pygame.K_EXCLAIM,
+	'asciicircum' : pygame.K_CARET,
+        'parenleft' : pygame.K_LEFTPAREN,
+        'parenright' : pygame.K_RIGHTPAREN,
+        'braceleft' : ord('{'),
+        'braceright' : ord('}'),
+        'bracketleft' : pygame.K_LEFTBRACKET,
+        'bracketright' : pygame.K_RIGHTBRACKET,
+        'apostrophe' : ord('\''),
+        'equal' : pygame.K_EQUALS,
+        'grave' : pygame.K_BACKQUOTE,
+        'Caps_Lock' : pygame.K_CAPSLOCK,
+        'Page_Up' : pygame.K_PAGEUP,
+        'Page_Down' : pygame.K_PAGEDOWN,
+        'Num_Lock' : pygame.K_NUMLOCK,
+        'Bar' : ord('|')
     }
     
     mod_map = {
