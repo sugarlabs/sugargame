@@ -69,7 +69,7 @@ class Translator(object):
         self._inner_evb.connect('button_press_event', self._mousedown_cb)
         self._inner_evb.connect('button_release_event', self._mouseup_cb)
         self._inner_evb.connect('motion-notify-event', self._mousemove_cb)
-        self._inner_evb.connect('draw', self._expose_cb)
+        self._inner_evb.connect('draw', self._draw_cb)
         self._inner_evb.connect('configure-event', self._resize_cb)
         
         # Internal data
@@ -89,7 +89,7 @@ class Translator(object):
         pygame.mouse.get_pressed = self._get_mouse_pressed
         pygame.mouse.get_pos = self._get_mouse_pos
         
-    def _expose_cb(self, event, widget):
+    def _draw_cb(self, widget, event):
         if pygame.display.get_init():
             pygame.event.post(pygame.event.Event(pygame.VIDEOEXPOSE))
         return True
