@@ -27,6 +27,9 @@ class PygameCanvas(Gtk.EventBox):
 
         self._socket = Gtk.Socket()
         self.add(self._socket)
+
+        self._initialized = False
+
         self.show_all()
 
     def run_pygame(self, main_fn):
@@ -37,11 +40,14 @@ class PygameCanvas(Gtk.EventBox):
         GObject.idle_add(self._run_pygame_cb, main_fn)
 
     def _run_pygame_cb(self, main_fn):
-        assert pygame.display.get_surface() is None, "PygameCanvas.run_pygame can only be called once."
+        # PygameCanvas.run_pygame can only be called once
+        if self._initialized:
+            return
 
         # Preinitialize Pygame with the X window ID.
-        assert pygame.display.get_init() == False, "Pygame must not be initialized before calling PygameCanvas.run_pygame."
         os.environ['SDL_WINDOWID'] = str(self._socket.get_id())
+        if pygame.display.get_surface() is not None:
+            pygame.display.quit()
         pygame.init()
 
         # Restore the default cursor.
@@ -56,6 +62,8 @@ class PygameCanvas(Gtk.EventBox):
 
         # Run the Pygame main loop.
         main_fn()
+
+        self._initialized = True
         return False
 
     def get_pygame_widget(self):
