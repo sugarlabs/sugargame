@@ -3,7 +3,6 @@ from gi.repository import Gdk
 from gi.repository import GObject
 import pygame
 import pygame.event
-import logging
 
 class _MockEvent(object):
     def __init__(self, keyval):
@@ -48,7 +47,8 @@ class Translator(object):
         # (add instead of set here because the main window is already realized)
         self._mainwindow.add_events(
             Gdk.EventMask.KEY_PRESS_MASK | \
-            Gdk.EventMask.KEY_RELEASE_MASK \
+            Gdk.EventMask.KEY_RELEASE_MASK | \
+            Gdk.EventMask.VISIBILITY_NOTIFY_MASK
         )
 
         self._inner_evb.set_events(
@@ -56,7 +56,7 @@ class Translator(object):
             Gdk.EventMask.POINTER_MOTION_HINT_MASK | \
             Gdk.EventMask.BUTTON_MOTION_MASK | \
             Gdk.EventMask.BUTTON_PRESS_MASK | \
-            Gdk.EventMask.BUTTON_RELEASE_MASK 
+            Gdk.EventMask.BUTTON_RELEASE_MASK
         )
 
         self._mainwindow.set_can_focus(True)
@@ -64,6 +64,7 @@ class Translator(object):
 
         # Callback functions to link the event systems
         self._mainwindow.connect('unrealize', self._quit_cb)
+        self._mainwindow.connect('visibility_notify_event', self._visibility_cb)
         self._inner_evb.connect('key_press_event', self._keydown_cb)
         self._inner_evb.connect('key_release_event', self._keyup_cb)
         self._inner_evb.connect('button_press_event', self._mousedown_cb)
@@ -71,6 +72,7 @@ class Translator(object):
         self._inner_evb.connect('motion-notify-event', self._mousemove_cb)
         self._inner_evb.connect('draw', self._draw_cb)
         self._inner_evb.connect('configure-event', self._resize_cb)
+        self._inner_evb.connect('screen-changed', self._screen_changed_cb)
 
         # Internal data
         self.__stopped = False
@@ -89,6 +91,9 @@ class Translator(object):
         pygame.mouse.get_pressed = self._get_mouse_pressed
         pygame.mouse.get_pos = self._get_mouse_pos
 
+    def update_display(self):
+        pygame.event.post(pygame.event.Event(pygame.VIDEOEXPOSE))
+
     def _draw_cb(self, widget, event):
         if pygame.display.get_init():
             pygame.event.post(pygame.event.Event(pygame.VIDEOEXPOSE))
@@ -100,9 +105,18 @@ class Translator(object):
         pygame.event.post(evt)
         return False # continue processing
 
+    def _screen_changed_cb(self, event):
+        if pygame.display.get_init():
+            self.update_display()
+
     def _quit_cb(self, data=None):
         self.__stopped = True
         pygame.event.post(pygame.event.Event(pygame.QUIT))
+
+    def _visibility_cb(self, widget, event):
+        if pygame.display.get_init():
+            self.update_display()
+        return False
 
     def _keydown_cb(self, widget, event):
         key = event.keyval
