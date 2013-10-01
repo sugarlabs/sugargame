@@ -105,7 +105,7 @@ class Translator(object):
         pygame.event.post(evt)
         return False # continue processing
 
-    def _screen_changed_cb(self, event):
+    def _screen_changed_cb(self, widget, previous_screen):
         if pygame.display.get_init():
             self.update_display()
 
