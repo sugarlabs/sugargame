@@ -1,17 +1,19 @@
 import os
 from gi.repository import Gtk
 from gi.repository import GObject
+from sugar3.activity.activity import PREVIEW_SIZE
 import pygame
 import event
 
 CANVAS = None
+
 
 class PygameCanvas(Gtk.EventBox):
 
     """
     mainwindow is the activity intself.
     """
-    def __init__(self, mainwindow, pointer_hint = True):
+    def __init__(self, mainwindow, pointer_hint=True):
         GObject.GObject.__init__(self)
 
         global CANVAS
@@ -33,8 +35,10 @@ class PygameCanvas(Gtk.EventBox):
         self.show_all()
 
     def run_pygame(self, main_fn):
-        # Run the main loop after a short delay.  The reason for the delay is that the
-        # Sugar activity is not properly created until after its constructor returns.
+        # Run the main loop after a short delay.
+        # The reason for the delay is that the
+        # Sugar activity is not properly created until after its constructor
+        # returns.
         # If the Pygame main loop is called from the activity constructor, the
         # constructor never returns and the activity freezes.
         GObject.idle_add(self._run_pygame_cb, main_fn)
@@ -55,7 +59,8 @@ class PygameCanvas(Gtk.EventBox):
 
         # Initialize the Pygame window.
         r = self.get_allocation()
-        pygame.display.set_mode((r.width, r.height), pygame.RESIZABLE)
+        self._screen = pygame.display.set_mode((r.width, r.height),
+            pygame.RESIZABLE)
 
         # Hook certain Pygame functions with GTK equivalents.
         self.translator.hook_pygame()
@@ -68,3 +73,27 @@ class PygameCanvas(Gtk.EventBox):
 
     def get_pygame_widget(self):
         return self._socket
+
+    def get_preview(self):
+        """
+        Return preview of main surface
+        How to use in activity:
+            def get_preview(self):
+                return self.game_canvas.get_preview()
+        """
+
+        _tmp_dir = os.path.join(self._mainwindow.get_activity_root(),
+            'tmp')
+        _file_path = os.path.join(_tmp_dir, 'preview.png')
+
+        width = PREVIEW_SIZE[0]
+        height = PREVIEW_SIZE[1]
+        _surface = pygame.transform.scale(self._screen, (width, height))
+        pygame.image.save(_surface, _file_path)
+
+        f = open(_file_path, 'r')
+        preview = f.read()
+        f.close()
+        os.remove(_file_path)
+
+        return preview
