@@ -90,3 +90,6 @@ class TestActivity(sugar3.activity.activity.Activity):
 
     def write_file(self, file_path):
         self.game.write_file(file_path)
+
+    def get_preview(self):
+        return self._pygamecanvas.get_preview()
