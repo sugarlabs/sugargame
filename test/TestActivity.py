@@ -79,10 +79,10 @@ class TestActivity(sugar3.activity.activity.Activity):
 
         # Update the button to show the next action.
         if self.paused:
-            button.set_icon('media-playback-start')
+            button.set_icon_name('media-playback-start')
             button.set_tooltip(_("Start"))
         else:
-            button.set_icon('media-playback-stop')
+            button.set_icon_name('media-playback-stop')
             button.set_tooltip(_("Stop"))
 
     def read_file(self, file_path):
