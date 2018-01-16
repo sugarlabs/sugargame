@@ -77,7 +77,6 @@ class Translator(object):
         self._inner_evb.connect('screen-changed', self._screen_changed_cb)
 
         # Internal data
-        self.__stopped = False
         self.__keystate = [0] * 323
         self.__button_state = [0, 0, 0]
         self.__mouse_pos = (0, 0)
@@ -113,7 +112,6 @@ class Translator(object):
             self.update_display()
 
     def _quit_cb(self, data=None):
-        self.__stopped = True
         pygame.event.post(pygame.event.Event(pygame.QUIT))
 
     def _visibility_cb(self, widget, event):
