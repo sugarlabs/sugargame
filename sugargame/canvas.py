@@ -21,55 +21,41 @@ class PygameCanvas(Gtk.EventBox):
         self.translator = event.Translator(activity, self)
 
         self._activity = activity
+        self._main_fn = None
+        self._modules = [pygame]
 
         self.set_can_focus(True)
 
         self._socket = Gtk.Socket()
+        self._socket.connect('realize', self._realize_cb)
         self.add(self._socket)
-
-        self._initialized = False
 
         self.show_all()
 
     def run_pygame(self, main_fn, modules=[pygame]):
+        self._main_fn = main_fn
+        self._modules = modules
 
-        # PygameCanvas.run_pygame can only be called once
-        if self._initialized:
-            return
-
-        # Run the main loop as an idle source.
-
-        # A Sugar activity is not fully created until after its
-        # constructor returns.  If the main loop is called from the
-        # activity constructor, the constructor never returns and the
-        # activity freezes.
-
-        GLib.idle_add(self._run_pygame_cb, main_fn, modules)
-
-        self._initialized = True
-
-    def _run_pygame_cb(self, main_fn, modules):
+    def _realize_cb(self, widget):
 
         # Preinitialize Pygame with the X window ID.
-        os.environ['SDL_WINDOWID'] = str(self._socket.get_id())
-        for module in modules:
+        os.environ['SDL_WINDOWID'] = str(widget.get_id())
+        for module in self._modules:
             module.init()
 
         # Restore the default cursor.
-        self._socket.props.window.set_cursor(None)
+        widget.props.window.set_cursor(None)
 
         # Initialize the Pygame window.
         r = self.get_allocation()
         self._screen = pygame.display.set_mode((r.width, r.height),
-            pygame.RESIZABLE)
+                                               pygame.RESIZABLE)
 
         # Hook certain Pygame functions with GTK equivalents.
         self.translator.hook_pygame()
 
-        # Run the Pygame main loop.
-        main_fn()
-
-        return False
+        if self._main_fn:
+            GLib.idle_add(self._main_fn)
 
     def get_pygame_widget(self):
         return self._socket
