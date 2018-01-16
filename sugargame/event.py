@@ -101,10 +101,11 @@ class Translator(object):
         return True
 
     def _resize_cb(self, widget, event):
-        evt = pygame.event.Event(pygame.VIDEORESIZE,
-                                 size=(event.width,event.height),
-                                 width=event.width, height=event.height)
-        pygame.event.post(evt)
+        if pygame.display.get_init():
+            evt = pygame.event.Event(pygame.VIDEORESIZE,
+                                     size=(event.width,event.height),
+                                     width=event.width, height=event.height)
+            pygame.event.post(evt)
         return False  # continue processing
 
     def _screen_changed_cb(self, widget, previous_screen):
