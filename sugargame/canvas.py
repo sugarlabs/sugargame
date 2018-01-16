@@ -1,6 +1,7 @@
 import os
 from gi.repository import Gtk
 from gi.repository import GObject
+from gi.repository import GLib
 from sugar3.activity.activity import PREVIEW_SIZE
 import pygame
 import event
@@ -30,25 +31,29 @@ class PygameCanvas(Gtk.EventBox):
 
         self.show_all()
 
-    def run_pygame(self, main_fn):
-        # Run the main loop after a short delay.
-        # The reason for the delay is that the
-        # Sugar activity is not properly created until after its constructor
-        # returns.
-        # If the Pygame main loop is called from the activity constructor, the
-        # constructor never returns and the activity freezes.
-        GObject.idle_add(self._run_pygame_cb, main_fn)
+    def run_pygame(self, main_fn, modules=[pygame]):
 
-    def _run_pygame_cb(self, main_fn):
         # PygameCanvas.run_pygame can only be called once
         if self._initialized:
             return
 
+        # Run the main loop as an idle source.
+
+        # A Sugar activity is not fully created until after its
+        # constructor returns.  If the main loop is called from the
+        # activity constructor, the constructor never returns and the
+        # activity freezes.
+
+        GLib.idle_add(self._run_pygame_cb, main_fn, modules)
+
+        self._initialized = True
+
+    def _run_pygame_cb(self, main_fn, modules):
+
         # Preinitialize Pygame with the X window ID.
         os.environ['SDL_WINDOWID'] = str(self._socket.get_id())
-        if pygame.display.get_surface() is not None:
-            pygame.display.quit()
-        pygame.init()
+        for module in modules:
+            module.init()
 
         # Restore the default cursor.
         self._socket.props.window.set_cursor(None)
@@ -64,7 +69,6 @@ class PygameCanvas(Gtk.EventBox):
         # Run the Pygame main loop.
         main_fn()
 
-        self._initialized = True
         return False
 
     def get_pygame_widget(self):
