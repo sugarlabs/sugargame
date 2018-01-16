@@ -255,7 +255,9 @@ class Translator(object):
         try:
             pygame.event.post(evt)
         except pygame.error, e:
-            if str(e) == 'Event queue full':
+            if str(e) == 'video system not initialized':
+                pass
+            elif str(e) == 'Event queue full':
                 logging.error("Event queue full!")
                 pass
             else:
