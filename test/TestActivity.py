@@ -39,7 +39,8 @@ class TestActivity(sugar3.activity.activity.Activity):
 
         # Start the game running (self.game.run is called when the
         # activity constructor returns).
-        self._pygamecanvas.run_pygame(self.game.run)
+        self._pygamecanvas.run_pygame(self.game.run,
+                                      modules=[pygame.display])
 
     def build_toolbar(self):
         toolbar_box = ToolbarBox()
