@@ -39,56 +39,59 @@ To make the Activity class, start with test/TestActivity.py from the Sugargame d
 The activity must create a single PygameCanvas widget:
 
 ```
- self._canvas = sugargame.canvas.PygameCanvas(self)
- self.set_canvas(self._canvas)
+import sugargame.canvas
+...
+    self._canvas = sugargame.canvas.PygameCanvas(self)
+    self.set_canvas(self._canvas)
 ```
 
 The activity may assign keyboard focus to the PygameCanvas widget, so that keyboard events generate Pygame events:
 
 ```
-self._canvas.grab_focus()
+    self._canvas.grab_focus()
 ```
 
 The activity must call the run_pygame method of the PygameCanvas widget, passing the main loop function of the Pygame program.
 
 ```
- # Start the game running.
- self._canvas.run_pygame(self.game.run)
+    # Start the game running.
+    self._canvas.run_pygame(self.game.run)
 ```
 
 In your Pygame main loop, you must pump the GTK event loop:
 
 ```
-   while gtk.events_pending():
-       gtk.main_iteration()
+    while Gtk.events_pending():
+        Gtk.main_iteration()
 ```
 
-## Adding Pygame to a PyGTK activity 
+## Adding Pygame to a GTK activity 
 
 To add Pygame to an existing Sugar activity, create a PygameCanvas widget and call run_pygame on it.
 
 ```
- widget = sugargame.canvas.PygameCanvas(self)
- vbox.pack_start(widget)
+    widget = sugargame.canvas.PygameCanvas(self)
+    vbox.pack_start(widget)
 
- widget.run_pygame(self.game.run)
+     widget.run_pygame(self.game.run)
 ```
 
 Due to limitations of Pygame and SDL, there can only be one PygameCanvas in the entire activity.
 
-The argument to run_pygame is a function structured like a Pygame program.  In the main loop, remember to dispatch GTK events using gtk.main_iteration().
+The argument to run_pygame is a function structured like a Pygame program.  In the main loop, remember to dispatch GTK events using Gtk.main_iteration().
 
 ```
- def main_loop():
+    def main_loop():
+        self.running = True
         clock = pygame.time.Clock()
         screen = pygame.display.get_surface()
 
         while self.running:
-            # Pump GTK messages.
-            while gtk.events_pending():
-                gtk.main_iteration()
+            # Pump GTK events
+            while Gtk.events_pending():
+                Gtk.main_iteration()
 
-            # Pump PyGame messages.
+            # Pump PyGame events
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return
