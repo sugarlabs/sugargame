@@ -82,6 +82,9 @@ class PygameCanvas(Gtk.EventBox):
                 return self.game_canvas.get_preview()
         """
 
+        if not hasattr(self, '_screen'):
+            return None
+
         _tmp_dir = os.path.join(self._mainwindow.get_activity_root(),
             'tmp')
         _file_path = os.path.join(_tmp_dir, 'preview.png')
