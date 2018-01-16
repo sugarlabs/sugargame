@@ -4,7 +4,7 @@ import sys
 from gi.repository import Gtk
 import pygame
 
-import sugar3.activity.activity
+from sugar3.activity.activity import Activity
 from sugar3.graphics.toolbarbox import ToolbarBox
 from sugar3.activity.widgets import ActivityToolbarButton
 from sugar3.graphics.toolbutton import ToolButton
@@ -17,9 +17,9 @@ import sugargame.canvas
 import TestGame
 
 
-class TestActivity(sugar3.activity.activity.Activity):
+class TestActivity(Activity):
     def __init__(self, handle):
-        super(TestActivity, self).__init__(handle)
+        Activity.__init__(self, handle)
 
         self.paused = False
 
