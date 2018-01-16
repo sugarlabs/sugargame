@@ -1,3 +1,4 @@
+import logging
 from gi.repository import Gdk
 from gi.repository import GObject
 import pygame
@@ -167,7 +168,7 @@ class Translator(object):
             # view source request, specially handled...
             self._activity.view_source()
         else:
-            print 'Key %s unrecognized' % key
+            logging.error('Key %s unrecognized' % key)
 
         if keycode is not None:
             if type == pygame.KEYDOWN:
@@ -257,7 +258,7 @@ class Translator(object):
             pygame.event.post(evt)
         except pygame.error, e:
             if str(e) == 'Event queue full':
-                print "Event queue full!"
+                logging.error("Event queue full!")
                 pass
             else:
                 raise e
