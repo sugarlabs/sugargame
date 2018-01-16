@@ -53,13 +53,13 @@ class TestActivity(sugar3.activity.activity.Activity):
 
         # Pause/Play button:
 
-        stop_play = ToolButton('media-playback-stop')
-        stop_play.set_tooltip(_("Stop"))
-        stop_play.set_accelerator(_('<ctrl>space'))
-        stop_play.connect('clicked', self._stop_play_cb)
-        stop_play.show()
+        pause_play = ToolButton('media-playback-pause')
+        pause_play.set_tooltip(_("Pause"))
+        pause_play.set_accelerator(_('<ctrl>space'))
+        pause_play.connect('clicked', self._pause_play_cb)
+        pause_play.show()
 
-        toolbar_box.toolbar.insert(stop_play, -1)
+        toolbar_box.toolbar.insert(pause_play, -1)
 
         # Blank space (separator) and Stop button at the end:
 
@@ -72,8 +72,9 @@ class TestActivity(sugar3.activity.activity.Activity):
         stop_button = StopButton(self)
         toolbar_box.toolbar.insert(stop_button, -1)
         stop_button.show()
+        stop_button.connect('clicked', self._stop_cb)
 
-    def _stop_play_cb(self, button):
+    def _pause_play_cb(self, button):
         # Pause or unpause the game.
         self.paused = not self.paused
         self.game.set_paused(self.paused)
@@ -83,8 +84,11 @@ class TestActivity(sugar3.activity.activity.Activity):
             button.set_icon_name('media-playback-start')
             button.set_tooltip(_("Start"))
         else:
-            button.set_icon_name('media-playback-stop')
-            button.set_tooltip(_("Stop"))
+            button.set_icon_name('media-playback-pause')
+            button.set_tooltip(_("Pause"))
+
+    def _stop_cb(self, button):
+        self.game.running = False
 
     def read_file(self, file_path):
         self.game.read_file(file_path)
