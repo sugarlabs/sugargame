@@ -38,13 +38,19 @@ class PygameCanvas(Gtk.EventBox):
             return
 
         # Run the main loop as an idle source.
-
+        #
         # A Sugar activity is not fully created until after its
         # constructor returns.  If the main loop is called from the
         # activity constructor, the constructor never returns and the
         # activity freezes.
-
         GLib.idle_add(self._run_pygame_cb, main_fn, modules)
+
+        # Briefly start the activity iconified.
+        #
+        # Using the idle source to initialise Pygame causes the
+        # activity toolbar to render on screen before the Pygame
+        # window, which is visually confusing.
+        self._activity.iconify()
 
         self._initialized = True
 
@@ -65,6 +71,9 @@ class PygameCanvas(Gtk.EventBox):
 
         # Hook certain Pygame functions with GTK equivalents.
         self.translator.hook_pygame()
+
+        # Reveal the activity
+        self._activity.reveal()
 
         # Run the Pygame main loop.
         main_fn()
