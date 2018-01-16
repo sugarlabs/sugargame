@@ -67,13 +67,12 @@ class Translator(object):
         # Callback functions to link the event systems
         self._activity.connect('unrealize', self._quit_cb)
         self._activity.connect('visibility_notify_event', self._visibility_cb)
+        self._activity.connect('configure-event', self._resize_cb)
         self._inner_evb.connect('key_press_event', self._keydown_cb)
         self._inner_evb.connect('key_release_event', self._keyup_cb)
         self._inner_evb.connect('button_press_event', self._mousedown_cb)
         self._inner_evb.connect('button_release_event', self._mouseup_cb)
         self._inner_evb.connect('motion-notify-event', self._mousemove_cb)
-        self._inner_evb.connect('draw', self._draw_cb)
-        self._inner_evb.connect('configure-event', self._resize_cb)
         self._inner_evb.connect('screen-changed', self._screen_changed_cb)
 
         # Internal data
@@ -93,12 +92,8 @@ class Translator(object):
         pygame.mouse.get_pos = self._get_mouse_pos
 
     def update_display(self):
-        pygame.event.post(pygame.event.Event(pygame.VIDEOEXPOSE))
-
-    def _draw_cb(self, widget, event):
         if pygame.display.get_init():
             pygame.event.post(pygame.event.Event(pygame.VIDEOEXPOSE))
-        return True
 
     def _resize_cb(self, widget, event):
         if pygame.display.get_init():
@@ -109,15 +104,13 @@ class Translator(object):
         return False  # continue processing
 
     def _screen_changed_cb(self, widget, previous_screen):
-        if pygame.display.get_init():
-            self.update_display()
+        self.update_display()
 
     def _quit_cb(self, data=None):
         pygame.event.post(pygame.event.Event(pygame.QUIT))
 
     def _visibility_cb(self, widget, event):
-        if pygame.display.get_init():
-            self.update_display()
+        self.update_display()
         return False
 
     def _keydown_cb(self, widget, event):
