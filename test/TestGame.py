@@ -3,15 +3,18 @@ import pygame
 from gi.repository import Gtk
 
 
+RADIUS = 100
+
+
 class TestGame:
     def __init__(self):
         # Set up a clock for managing the frame rate.
         self.clock = pygame.time.Clock()
 
-        self.x = -100
-        self.y = 100
+        self.x = -RADIUS
+        self.y = RADIUS
 
-        self.vx = 10
+        self.vx = RADIUS / 10
         self.vy = 0
 
         self.paused = False
@@ -33,11 +36,22 @@ class TestGame:
         self.running = True
 
         screen = pygame.display.get_surface()
+        width = screen.get_width()
+        height = screen.get_height()
+
+        dirty = []
+        dirty.append(pygame.draw.rect(screen, (255, 255, 255),
+                                      pygame.Rect(0, 0, width, height)))
+        pygame.display.update(dirty)
 
         while self.running:
+            dirty = []
+
             # Pump GTK messages.
             while Gtk.events_pending():
                 Gtk.main_iteration()
+            if not self.running:
+                break
 
             # Pump PyGame messages.
             for event in pygame.event.get():
@@ -45,6 +59,11 @@ class TestGame:
                     return
                 elif event.type == pygame.VIDEORESIZE:
                     pygame.display.set_mode(event.size, pygame.RESIZABLE)
+                    width = screen.get_width()
+                    height = screen.get_height()
+                    dirty.append(pygame.draw.rect(screen, (255, 255, 255),
+                                                  pygame.Rect(0, 0,
+                                                              width, height)))
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT:
                         self.direction = -1
@@ -53,29 +72,32 @@ class TestGame:
 
             # Move the ball
             if not self.paused:
+
+                # Erase the ball
+                dirty.append(pygame.draw.circle(screen, (255, 255, 255),
+                                                (self.x, self.y), RADIUS))
+
                 self.x += self.vx * self.direction
-                if self.direction == 1 and self.x > screen.get_width() - 100:
-                    self.x = screen.get_width() - 100
+                if self.direction == 1 and self.x > width - RADIUS:
+                    self.x = width - RADIUS
                     self.direction = -1
-                elif self.direction == -1 and self.x < 100:
-                    self.x = 100
+                elif self.direction == -1 and self.x < RADIUS:
+                    self.x = RADIUS
                     self.direction = 1
 
                 self.y += self.vy
-                if self.y > screen.get_height() - 100:
-                    self.y = screen.get_height() - 100
+                if self.y > height - RADIUS:
+                    self.y = height - RADIUS
                     self.vy = -self.vy
 
                 self.vy += 5
 
-            # Clear Display
-            screen.fill((255, 255, 255))  # 255 for white
+                # Draw the ball
+                dirty.append(pygame.draw.circle(screen, (192, 0, 0),
+                                                (self.x, self.y), RADIUS))
 
-            # Draw the ball
-            pygame.draw.circle(screen, (255, 0, 0), (self.x, self.y), 100)
-
-            # Flip Display
-            pygame.display.flip()
+            # Update Display
+            pygame.display.update(dirty)
 
             # Try to stay at 30 FPS
             self.clock.tick(30)
