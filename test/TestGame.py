@@ -54,10 +54,12 @@ class TestGame:
             # Move the ball
             if not self.paused:
                 self.x += self.vx * self.direction
-                if self.direction == 1 and self.x > screen.get_width() + 100:
-                    self.x = -100
-                elif self.direction == -1 and self.x < -100:
-                    self.x = screen.get_width() + 100
+                if self.direction == 1 and self.x > screen.get_width() - 100:
+                    self.x = screen.get_width() - 100
+                    self.direction = -1
+                elif self.direction == -1 and self.x < 100:
+                    self.x = 100
+                    self.direction = 1
 
                 self.y += self.vy
                 if self.y > screen.get_height() - 100:
