@@ -9,11 +9,7 @@ CANVAS = None
 
 
 class PygameCanvas(Gtk.EventBox):
-
-    """
-    mainwindow is the activity intself.
-    """
-    def __init__(self, mainwindow, pointer_hint=True):
+    def __init__(self, activity, pointer_hint=True):
         GObject.GObject.__init__(self)
 
         global CANVAS
@@ -21,9 +17,9 @@ class PygameCanvas(Gtk.EventBox):
         CANVAS = self
 
         # Initialize Events translator before widget gets "realized".
-        self.translator = event.Translator(mainwindow, self)
+        self.translator = event.Translator(activity, self)
 
-        self._mainwindow = mainwindow
+        self._activity = activity
 
         self.set_can_focus(True)
 
@@ -85,7 +81,7 @@ class PygameCanvas(Gtk.EventBox):
         if not hasattr(self, '_screen'):
             return None
 
-        _tmp_dir = os.path.join(self._mainwindow.get_activity_root(),
+        _tmp_dir = os.path.join(self._activity.get_activity_root(),
             'tmp')
         _file_path = os.path.join(_tmp_dir, 'preview.png')
 

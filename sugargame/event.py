@@ -39,14 +39,14 @@ class Translator(object):
         pygame.K_RSHIFT: pygame.KMOD_RSHIFT,
     }
 
-    def __init__(self, mainwindow, inner_evb):
+    def __init__(self, activity, inner_evb):
         """Initialise the Translator with the windows to which to listen"""
-        self._mainwindow = mainwindow
+        self._activity = activity
         self._inner_evb = inner_evb
 
         # Enable events
         # (add instead of set here because the main window is already realized)
-        self._mainwindow.add_events(
+        self._activity.add_events(
             Gdk.EventMask.KEY_PRESS_MASK |
             Gdk.EventMask.KEY_RELEASE_MASK |
             Gdk.EventMask.VISIBILITY_NOTIFY_MASK
@@ -60,12 +60,12 @@ class Translator(object):
             Gdk.EventMask.BUTTON_RELEASE_MASK
         )
 
-        self._mainwindow.set_can_focus(True)
+        self._activity.set_can_focus(True)
         self._inner_evb.set_can_focus(True)
 
         # Callback functions to link the event systems
-        self._mainwindow.connect('unrealize', self._quit_cb)
-        self._mainwindow.connect('visibility_notify_event', self._visibility_cb)
+        self._activity.connect('unrealize', self._quit_cb)
+        self._activity.connect('visibility_notify_event', self._visibility_cb)
         self._inner_evb.connect('key_press_event', self._keydown_cb)
         self._inner_evb.connect('key_release_event', self._keyup_cb)
         self._inner_evb.connect('button_press_event', self._mousedown_cb)
@@ -165,7 +165,7 @@ class Translator(object):
             keycode = getattr(pygame, 'K_' + key.lower())
         elif key == 'XF86Start':
             # view source request, specially handled...
-            self._mainwindow.view_source()
+            self._activity.view_source()
         else:
             print 'Key %s unrecognized' % key
 
