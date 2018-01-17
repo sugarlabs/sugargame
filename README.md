@@ -36,12 +36,13 @@ The activity directory should look something like this:
 
 To make the Activity class, start with test/TestActivity.py from the Sugargame distribution.
 
-The activity must create a single PygameCanvas widget:
+The activity must create a single PygameCanvas widget, passing the main loop function of the Pygame program:
+
 
 ```
 import sugargame.canvas
 ...
-    self._canvas = sugargame.canvas.PygameCanvas(self)
+    self._canvas = sugargame.canvas.PygameCanvas(self, main=self.game.run)
     self.set_canvas(self._canvas)
 ```
 
@@ -51,13 +52,6 @@ The activity may assign keyboard focus to the PygameCanvas widget, so that keybo
     self._canvas.grab_focus()
 ```
 
-The activity must call the run_pygame method of the PygameCanvas widget, passing the main loop function of the Pygame program.
-
-```
-    # Start the game running.
-    self._canvas.run_pygame(self.game.run)
-```
-
 In your Pygame main loop, you must pump the GTK event loop:
 
 ```
@@ -65,7 +59,7 @@ In your Pygame main loop, you must pump the GTK event loop:
         Gtk.main_iteration()
 ```
 
-## Adding Pygame to a GTK activity 
+## Adding Pygame to a GTK activity
 
 To add Pygame to an existing Sugar activity, create a PygameCanvas widget and call run_pygame on it.
 
@@ -73,7 +67,7 @@ To add Pygame to an existing Sugar activity, create a PygameCanvas widget and ca
     widget = sugargame.canvas.PygameCanvas(self)
     vbox.pack_start(widget)
 
-     widget.run_pygame(self.game.run)
+    widget.run_pygame(self.game.run)
 ```
 
 Due to limitations of Pygame and SDL, there can only be one PygameCanvas in the entire activity.
@@ -125,6 +119,12 @@ Sugargame was developed by Wade Brainerd <wadetb@gmail.com>.
 Sugargame was loosely based on the source code to the olpcgames framework, developed by the One Laptop per Child project.
 
 ## Changelog
+
+### v1.2
+* Port to GTK+ 3  (Manuel Quiñones)
+* Add get_preview method  (Ignacio Rodríguez)
+* Fix startup delay and display resize  (James Cameron)
+* Fix race condition on fast systems  (James Cameron)
 
 ### v1.1
 * Fix bugs in event handling.  (Pablo Moleri)

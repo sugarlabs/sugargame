@@ -10,7 +10,8 @@ CANVAS = None
 
 
 class PygameCanvas(Gtk.EventBox):
-    def __init__(self, activity, pointer_hint=True):
+    def __init__(self, activity, pointer_hint=True,
+                 main=None, modules=[pygame]):
         GObject.GObject.__init__(self)
 
         global CANVAS
@@ -21,8 +22,8 @@ class PygameCanvas(Gtk.EventBox):
         self.translator = event.Translator(activity, self)
 
         self._activity = activity
-        self._main_fn = None
-        self._modules = [pygame]
+        self._main = main
+        self._modules = modules
 
         self.set_can_focus(True)
 
@@ -31,10 +32,6 @@ class PygameCanvas(Gtk.EventBox):
         self.add(self._socket)
 
         self.show_all()
-
-    def run_pygame(self, main_fn, modules=[pygame]):
-        self._main_fn = main_fn
-        self._modules = modules
 
     def _realize_cb(self, widget):
 
@@ -46,7 +43,7 @@ class PygameCanvas(Gtk.EventBox):
         # Restore the default cursor.
         widget.props.window.set_cursor(None)
 
-        # Initialize the Pygame window.
+        # Confine the Pygame surface to the canvas size
         r = self.get_allocation()
         self._screen = pygame.display.set_mode((r.width, r.height),
                                                pygame.RESIZABLE)
@@ -54,8 +51,9 @@ class PygameCanvas(Gtk.EventBox):
         # Hook certain Pygame functions with GTK equivalents.
         self.translator.hook_pygame()
 
-        if self._main_fn:
-            GLib.idle_add(self._main_fn)
+        # Call the caller's main loop as an idle source
+        if self._main:
+            GLib.idle_add(self._main)
 
     def get_pygame_widget(self):
         return self._socket

@@ -1,6 +1,8 @@
 from gettext import gettext as _
 
 import sys
+import gi
+gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 import pygame
 
@@ -29,18 +31,17 @@ class TestActivity(Activity):
         # Build the activity toolbar.
         self.build_toolbar()
 
-        # Build the Pygame canvas.
-        self._pygamecanvas = sugargame.canvas.PygameCanvas(self)
+        # Build the Pygame canvas and start the game running
+        # (self.game.run is called when the activity constructor
+        # returns).
+        self._pygamecanvas = sugargame.canvas.PygameCanvas(self,
+            main=self.game.run,
+            modules=[pygame.display])
 
         # Note that set_canvas implicitly calls read_file when
         # resuming from the Journal.
         self.set_canvas(self._pygamecanvas)
         self._pygamecanvas.grab_focus()
-
-        # Start the game running (self.game.run is called when the
-        # activity constructor returns).
-        self._pygamecanvas.run_pygame(self.game.run,
-                                      modules=[pygame.display])
 
     def build_toolbar(self):
         toolbar_box = ToolbarBox()
