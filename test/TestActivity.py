@@ -20,6 +20,7 @@ import TestGame
 
 
 class TestActivity(Activity):
+
     def __init__(self, handle):
         Activity.__init__(self, handle)
 
@@ -35,8 +36,8 @@ class TestActivity(Activity):
         # (self.game.run is called when the activity constructor
         # returns).
         self._pygamecanvas = sugargame.canvas.PygameCanvas(self,
-            main=self.game.run,
-            modules=[pygame.display])
+                                                           main=self.game.run,
+                                                           modules=[pygame.display])
 
         # Note that set_canvas implicitly calls read_file when
         # resuming from the Journal.

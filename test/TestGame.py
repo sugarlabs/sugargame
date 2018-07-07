@@ -9,6 +9,7 @@ RADIUS = 100
 
 
 class TestGame:
+
     def __init__(self):
         # Set up a clock for managing the frame rate.
         self.clock = pygame.time.Clock()
