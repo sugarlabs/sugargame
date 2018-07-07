@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 import pygame
 from gi.repository import Gtk
 
@@ -14,7 +14,7 @@ class TestGame:
         self.x = -RADIUS
         self.y = RADIUS
 
-        self.vx = RADIUS / 10
+        self.vx = RADIUS // 10
         self.vy = 0
 
         self.paused = False
