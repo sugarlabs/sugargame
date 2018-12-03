@@ -9,8 +9,7 @@ CANVAS = None
 
 
 class PygameCanvas(Gtk.EventBox):
-    def __init__(self, activity, pointer_hint=True,
-                 main=None, modules=[pygame]):
+    def __init__(self, activity, main=None, modules=[pygame]):
         Gtk.EventBox.__init__(self)
 
         global CANVAS
