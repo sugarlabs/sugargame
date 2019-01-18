@@ -63,6 +63,7 @@ class PygameCanvas(Gtk.EventBox):
             def get_preview(self):
                 return self.game_canvas.get_preview()
         """
+        return self.game_canvas.get_preview()
 
         if not hasattr(self, '_screen'):
             return None
@@ -76,7 +77,7 @@ class PygameCanvas(Gtk.EventBox):
         _surface = pygame.transform.scale(self._screen, (width, height))
         pygame.image.save(_surface, _file_path)
 
-        f = open(_file_path, 'r')
+        f = open(_file_path, 'rb')
         preview = f.read()
         f.close()
         os.remove(_file_path)
