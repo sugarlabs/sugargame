@@ -61,18 +61,20 @@ In your Pygame main loop, you must pump the GTK event loop:
 
 ## Adding Pygame to a GTK activity
 
-To add Pygame to an existing Sugar activity, create a PygameCanvas widget and call run_pygame on it.
+To add Pygame to an existing Sugar activity, create a PygameCanvas widget passing the main loop function of the Pygame program, and the modules to initialise.
 
 ```
-    widget = sugargame.canvas.PygameCanvas(self)
+    widget = sugargame.canvas.PygameCanvas(self,
+        main=self.game.run,
+        modules=[pygame.display])
+
     vbox.pack_start(widget)
 
-    widget.run_pygame(self.game.run)
 ```
 
 Due to limitations of Pygame and SDL, there can only be one PygameCanvas in the entire activity.
 
-The argument to run_pygame is a function structured like a Pygame program.  In the main loop, remember to dispatch GTK events using Gtk.main_iteration().
+In the main loop, process GTK events using Gtk.main_iteration().
 
 ```
     def main_loop():
