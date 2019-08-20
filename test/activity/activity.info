@@ -1,6 +1,6 @@
 [Activity]
 name = SugargameTest
 bundle_id = org.sugarlabs.SugargameTest
-exec = sugar-activity TestActivity.TestActivity
+exec = sugar-activity3 TestActivity.TestActivity
 icon = activity-generic
 activity_version = 1
