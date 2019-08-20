@@ -28,8 +28,8 @@ class Translator(object):
         'KP_Down': pygame.K_KP2,
         'KP_Left': pygame.K_KP4,
         'KP_Right': pygame.K_KP6,
-        'KP_Next' : pygame.K_KP3,
-        'KP_Begin' : pygame.K_KP5,
+        'KP_Next': pygame.K_KP3,
+        'KP_Begin': pygame.K_KP5,
 
     }
 
