@@ -1,5 +1,7 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 import pygame
+import gi
+gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 
@@ -7,6 +9,7 @@ RADIUS = 100
 
 
 class TestGame:
+
     def __init__(self):
         # Set up a clock for managing the frame rate.
         self.clock = pygame.time.Clock()
@@ -14,7 +17,7 @@ class TestGame:
         self.x = -RADIUS
         self.y = RADIUS
 
-        self.vx = RADIUS / 10
+        self.vx = RADIUS // 10
         self.vy = 0
 
         self.paused = False

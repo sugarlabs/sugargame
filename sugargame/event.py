@@ -100,7 +100,7 @@ class Translator(object):
     def _resize_cb(self, widget, event):
         if pygame.display.get_init():
             evt = pygame.event.Event(pygame.VIDEORESIZE,
-                                     size=(event.width,event.height),
+                                     size=(event.width, event.height),
                                      width=event.width, height=event.height)
             pygame.event.post(evt)
         return False  # continue processing
@@ -141,7 +141,7 @@ class Translator(object):
 
     def _keymods(self):
         mod = 0
-        for key_val, mod_val in self.mod_map.iteritems():
+        for key_val, mod_val in self.mod_map.items():
             mod |= self.__keystate[key_val] and mod_val
         return mod
 
@@ -170,7 +170,7 @@ class Translator(object):
             self.__keystate[keycode] = type == pygame.KEYDOWN
             if type == pygame.KEYUP:
                 mod = self._keymods()
-            ukey = unichr(Gdk.keyval_to_unicode(event.keyval))
+            ukey = chr(Gdk.keyval_to_unicode(event.keyval))
             if ukey == '\000':
                 ukey = ''
             evt = pygame.event.Event(type, key=keycode, unicode=ukey, mod=mod)
@@ -194,7 +194,7 @@ class Translator(object):
 
     def _mouseevent(self, widget, event, type):
         evt = pygame.event.Event(type, button=event.button, pos=(event.x,
-            event.y))
+                                                                 event.y))
         self._post(evt)
         return True
 
@@ -250,7 +250,7 @@ class Translator(object):
     def _post(self, evt):
         try:
             pygame.event.post(evt)
-        except pygame.error, e:
+        except pygame.error as e:
             if str(e) == 'video system not initialized':
                 pass
             elif str(e) == 'Event queue full':
