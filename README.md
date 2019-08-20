@@ -122,6 +122,14 @@ Sugargame was loosely based on the source code to the olpcgames framework, devel
 
 ## Changelog
 
+### v1.3
+
+* Fix initialisation of Gtk.EventBox  (James Cameron)
+* Port from GObject to GLib  (James Cameron)
+* Remove pointer_hint from PygameCanvas  (James Cameron)
+* Add K_KP3 and K_KP5 to event translation table  (Aniket Mathur)
+* Port to Python 3  (Rahul Bothra)
+
 ### v1.2
 * Port to GTK+ 3  (Manuel Quiñones)
 * Add get_preview method  (Ignacio Rodríguez)
