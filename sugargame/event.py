@@ -321,7 +321,7 @@ class Translator(object):
             # view source request, specially handled...
             self._activity.view_source()
         else:
-            logging.warning('Key %s unrecognized' % key)
+            logging.error('Key %s unrecognized' % key)
 
         if keycode is not None:
             if type == pygame.KEYDOWN:
