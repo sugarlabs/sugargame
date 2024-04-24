@@ -338,7 +338,7 @@ class Translator(object):
         return True
 
     def _get_pressed(self):
-        return list(self.__keystate.values())
+        return self.__keystate
 
     def _get_mouse_pressed(self):
         return self.__button_state
